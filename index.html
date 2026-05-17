@@ -138,6 +138,9 @@
         const resultDisplay = document.getElementById('result-display');
         let userWalletAddress = null;
 
+        // Ton adresse Farcaster principale (compte CHASSEUR) sécurisée
+        const destinationAddress = "0x872bD846596Cc1aEde8Fd800997d242e3473fA83"; 
+
         async function connectWallet() {
             if (typeof window.ethereum !== 'undefined') {
                 try {
@@ -162,12 +165,41 @@
             }
         }
 
+        async function sendTransaction() {
+            try {
+                resultDisplay.innerHTML = "⚡ Please confirm the transaction in your wallet...";
+                resultDisplay.style.color = "#f3e5ab";
+
+                // Conversion de 0.001 ETH en hexadécimal (Wei)
+                const amountInWei = "0x38d7ea4c68000"; 
+
+                const transactionParameters = {
+                    to: destinationAddress,
+                    from: userWalletAddress,
+                    value: amountInWei,
+                };
+
+                const txHash = await window.ethereum.request({
+                    method: 'eth_sendTransaction',
+                    params: [transactionParameters],
+                });
+
+                resultDisplay.innerHTML = `🦅 Success! Transaction sent.<br><span style="font-size:0.7rem; color:#a68a80;">Hash: ${txHash.substring(0,10)}...</span>`;
+                resultDisplay.style.color = "#d4af37";
+                button.innerHTML = "Play Again";
+
+            } catch (error) {
+                console.error(error);
+                resultDisplay.innerHTML = "❌ Transaction canceled or failed.";
+                resultDisplay.style.color = "#ff4a4a";
+            }
+        }
+
         button.addEventListener('click', () => {
             if (!userWalletAddress) {
                 connectWallet();
             } else {
-                resultDisplay.innerHTML = "💸 Preparing transaction (0.001 ETH) to your nest...";
-                resultDisplay.style.color = "#f3e5ab";
+                sendTransaction();
             }
         });
     </script>
