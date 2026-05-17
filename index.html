@@ -23,12 +23,12 @@
             justify-content: center;
         }
 
-        /* Conteneur principal calé sur la hauteur disponible */
+        /* Conteneur principal calé sur l'écran mobile */
         .container {
             width: 100%;
             max-width: 400px;
             height: 100vh;
-            max-height: 85vh; /* Laisse de la place pour la barre d'adresse des wallets */
+            max-height: 90vh; /* Laisse de la place aux menus des portefeuilles */
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -37,14 +37,15 @@
             box-sizing: border-box;
         }
 
-        /* En-tête épuré */
+        /* En-tête */
         .header-zone {
             text-align: center;
             width: 100%;
+            margin-bottom: 5px;
         }
 
         h1 {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             color: #d4af37;
             margin: 0;
             text-transform: uppercase;
@@ -58,27 +59,27 @@
             font-style: italic;
         }
 
-        /* La carte de jeu avec ton visuel en arrière-plan */
+        /* La carte de jeu avec l'image EN ENTIER */
         .art-card {
             width: 100%;
             flex-grow: 1;
-            margin: 10px 0;
             border-radius: 15px;
             border: 1px solid #4a3b32;
             box-shadow: 0 8px 25px rgba(212, 175, 55, 0.1);
             background-image: url('visuel.png');
-            background-size: cover;
+            background-size: contain; /* Affiche l'image complète sans la couper */
+            background-repeat: no-repeat;
             background-position: center;
             display: flex;
             flex-direction: column;
-            justify-content: flex-end; /* Pousse les boutons vers le bas de l'image */
+            justify-content: flex-end; /* Garde les boutons bien placés en bas */
             align-items: center;
-            padding-bottom: 20px;
+            padding-bottom: 25px;
             box-sizing: border-box;
             position: relative;
         }
 
-        /* Bouton superposé au style Art Nouveau */
+        /* Bouton superposé */
         .btn-interact {
             background: linear-gradient(135deg, rgba(74, 53, 37, 0.95) 0%, rgba(43, 26, 16, 0.95) 100%);
             color: #f3e5ab;
@@ -100,7 +101,7 @@
             transform: scale(0.96);
         }
 
-        /* Boîte de statut en bas de la carte */
+        /* Boîte de statut */
         .status-box {
             width: 85%;
             margin-top: 10px;
