@@ -5,12 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TALON Hatchery - Le Jeu de l'Œuf</title>
     <style>
-        /* Design sombre et élégant inspiré de l'Art Nouveau */
         body {
             margin: 0;
             padding: 0;
             background-color: #0d0d0d;
-            color: #e5c1b3; /* Teinte douce or rose / cuivre */
+            color: #e5c1b3;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             flex-direction: column;
@@ -30,7 +29,7 @@
 
         h1 {
             font-size: 1.8rem;
-            color: #d4af37; /* Couleur Or pour le titre */
+            color: #d4af37;
             margin-bottom: 5px;
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -43,7 +42,6 @@
             font-style: italic;
         }
 
-        /* Zone de l'image sacrée */
         .art-container {
             position: relative;
             width: 100%;
@@ -60,12 +58,10 @@
             transition: transform 0.3s ease;
         }
 
-        /* Animation quand on clique sur l'image */
         .art-container img:active {
             transform: scale(0.98);
         }
 
-        /* Bouton d'action interactif */
         .btn-interact {
             background: linear-gradient(135deg, #4a3525 0%, #2b1a10 100%);
             color: #f3e5ab;
@@ -87,7 +83,6 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
         }
 
-        /* Zone d'affichage des résultats du jeu */
         .result-box {
             margin-top: 20px;
             padding: 15px;
@@ -112,21 +107,56 @@
             <img src="visuel.png" alt="L'Œuf de l'Aigle - TALON" id="eagle-egg">
         </div>
 
-        <button class="btn-interact" id="play-button">Tenter ma chance</button>
+        <button class="btn-interact" id="play-button">Connecter mon Wallet</button>
 
         <div class="result-box" id="result-display">
-            Misez un peu d'ETH pour interagir avec l'Œuf...
+            En attente de votre portefeuille crypto...
         </div>
     </div>
 
     <script>
-        // Logique de test temporaire en JavaScript
         const button = document.getElementById('play-button');
         const resultDisplay = document.getElementById('result-display');
+        let userWalletAddress = null;
 
+        // Fonction pour gérer la connexion au Wallet
+        async function connectWallet() {
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    resultDisplay.innerHTML = "Connexion en cours...";
+                    // Demande l'accès aux comptes du portefeuille
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    userWalletAddress = accounts[0];
+                    
+                    // Formatage propre de l'adresse (ex: 0x1234...abcd)
+                    const shortAddress = userWalletAddress.substring(0, 6) + "..." + userWalletAddress.substring(userWalletAddress.length - 4);
+                    
+                    resultDisplay.innerHTML = `✅ Connecté : ${shortAddress}`;
+                    resultDisplay.style.color = "#d4af37";
+                    
+                    // On change l'action du bouton pour le jeu
+                    button.innerHTML = "Tenter ma chance (0.001 ETH)";
+                } catch (error) {
+                    console.error(error);
+                    resultDisplay.innerHTML = "❌ Connexion refusée ou annulée.";
+                    resultDisplay.style.color = "#ff4a4a";
+                }
+            } else {
+                resultDisplay.innerHTML = "🦊 Wallet non détecté. Ouvrez ce lien depuis l'application Coinbase Wallet ou MetaMask !";
+                resultDisplay.style.color = "#ff9a4a";
+            }
+        }
+
+        // Action lors du clic sur le bouton
         button.addEventListener('click', () => {
-            resultDisplay.innerHTML = "⚡ Connexion au portefeuille bientôt disponible pour valider votre gain en $TALON !";
-            resultDisplay.style.color = "#d4af37";
+            if (!userWalletAddress) {
+                // Si pas connecté, on connecte
+                connectWallet();
+            } else {
+                // Si déjà connecté, on lancera la transaction d'ETH ici !
+                resultDisplay.innerHTML = "💸 Préparation de la transaction de 0.001 ETH vers votre nid...";
+                resultDisplay.style.color = "#f3e5ab";
+            }
         });
     </script>
 
