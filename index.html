@@ -1,116 +1,134 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TALON Hatchery - Le Jeu de l'Œuf</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TALON Hatchery</title>
     <style>
-        body {
+        /* Reset complet pour bloquer le scroll */
+        html, body {
             margin: 0;
             padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
             background-color: #0d0d0d;
-            color: #e5c1b3;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
-            overflow-x: hidden;
         }
 
+        /* Conteneur principal calé sur la hauteur disponible */
         .container {
-            max-width: 450px;
             width: 100%;
-            text-align: center;
-            padding: 20px;
+            max-width: 400px;
+            height: 100vh;
+            max-height: 85vh; /* Laisse de la place pour la barre d'adresse des wallets */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
             box-sizing: border-box;
         }
 
+        /* En-tête épuré */
+        .header-zone {
+            text-align: center;
+            width: 100%;
+        }
+
         h1 {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             color: #d4af37;
-            margin-bottom: 5px;
+            margin: 0;
             text-transform: uppercase;
             letter-spacing: 2px;
         }
 
         .subtitle {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: #a68a80;
-            margin-bottom: 20px;
+            margin: 2px 0 0 0;
             font-style: italic;
         }
 
-        .art-container {
-            position: relative;
+        /* La carte de jeu avec ton visuel en arrière-plan */
+        .art-card {
             width: 100%;
+            flex-grow: 1;
+            margin: 10px 0;
             border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.15);
             border: 1px solid #4a3b32;
-            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.1);
+            background-image: url('visuel.png');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end; /* Pousse les boutons vers le bas de l'image */
+            align-items: center;
+            padding-bottom: 20px;
+            box-sizing: border-box;
+            position: relative;
         }
 
-        .art-container img {
-            width: 100%;
-            display: block;
-            transition: transform 0.3s ease;
-        }
-
-        .art-container img:active {
-            transform: scale(0.98);
-        }
-
+        /* Bouton superposé au style Art Nouveau */
         .btn-interact {
-            background: linear-gradient(135deg, #4a3525 0%, #2b1a10 100%);
+            background: linear-gradient(135deg, rgba(74, 53, 37, 0.95) 0%, rgba(43, 26, 16, 0.95) 100%);
             color: #f3e5ab;
             border: 2px solid #d4af37;
-            padding: 15px 30px;
-            font-size: 1.1rem;
+            padding: 12px 24px;
+            font-size: 1rem;
             font-weight: bold;
-            border-radius: 30px;
+            border-radius: 25px;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
             transition: all 0.2s ease;
-            width: 80%;
+            width: 85%;
             text-transform: uppercase;
             letter-spacing: 1px;
+            z-index: 2;
         }
 
         .btn-interact:active {
-            transform: scale(0.95);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
+            transform: scale(0.96);
         }
 
-        .result-box {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 10px;
-            background-color: #141414;
-            border: 1px solid #2b1a10;
-            min-height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 500;
+        /* Boîte de statut en bas de la carte */
+        .status-box {
+            width: 85%;
+            margin-top: 10px;
+            padding: 8px;
+            border-radius: 8px;
+            background-color: rgba(20, 20, 20, 0.9);
+            border: 1px solid rgba(74, 59, 50, 0.5);
+            font-size: 0.85rem;
+            text-align: center;
+            color: #e5c1b3;
+            box-sizing: border-box;
+            z-index: 2;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>TALON Hatchery</h1>
-        <div class="subtitle">Réveillez la puissance de l'Aigle</div>
-
-        <div class="art-container">
-            <img src="visuel.png" alt="L'Œuf de l'Aigle - TALON" id="eagle-egg">
+        <div class="header-zone">
+            <h1>TALON Hatchery</h1>
+            <div class="subtitle">Awaken the Eagle's power</div>
         </div>
 
-        <button class="btn-interact" id="play-button">Connecter mon Wallet</button>
-
-        <div class="result-box" id="result-display">
-            En attente de votre portefeuille crypto...
+        <div class="art-card">
+            <button class="btn-interact" id="play-button">Connect Your Wallet</button>
+            <div class="status-box" id="result-display">
+                Waiting for your crypto wallet...
+            </div>
         </div>
     </div>
 
@@ -119,42 +137,35 @@
         const resultDisplay = document.getElementById('result-display');
         let userWalletAddress = null;
 
-        // Fonction pour gérer la connexion au Wallet
         async function connectWallet() {
             if (typeof window.ethereum !== 'undefined') {
                 try {
-                    resultDisplay.innerHTML = "Connexion en cours...";
-                    // Demande l'accès aux comptes du portefeuille
+                    resultDisplay.innerHTML = "Connecting...";
                     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                     userWalletAddress = accounts[0];
                     
-                    // Formatage propre de l'adresse (ex: 0x1234...abcd)
                     const shortAddress = userWalletAddress.substring(0, 6) + "..." + userWalletAddress.substring(userWalletAddress.length - 4);
                     
-                    resultDisplay.innerHTML = `✅ Connecté : ${shortAddress}`;
+                    resultDisplay.innerHTML = `✅ Connected: ${shortAddress}`;
                     resultDisplay.style.color = "#d4af37";
                     
-                    // On change l'action du bouton pour le jeu
-                    button.innerHTML = "Tenter ma chance (0.001 ETH)";
+                    button.innerHTML = "Try My Luck (0.001 ETH)";
                 } catch (error) {
                     console.error(error);
-                    resultDisplay.innerHTML = "❌ Connexion refusée ou annulée.";
+                    resultDisplay.innerHTML = "❌ Connection denied.";
                     resultDisplay.style.color = "#ff4a4a";
                 }
             } else {
-                resultDisplay.innerHTML = "🦊 Wallet non détecté. Ouvrez ce lien depuis l'application Coinbase Wallet ou MetaMask !";
+                resultDisplay.innerHTML = "🦊 Wallet not detected. Open this inside Coinbase Wallet or MetaMask!";
                 resultDisplay.style.color = "#ff9a4a";
             }
         }
 
-        // Action lors du clic sur le bouton
         button.addEventListener('click', () => {
             if (!userWalletAddress) {
-                // Si pas connecté, on connecte
                 connectWallet();
             } else {
-                // Si déjà connecté, on lancera la transaction d'ETH ici !
-                resultDisplay.innerHTML = "💸 Préparation de la transaction de 0.001 ETH vers votre nid...";
+                resultDisplay.innerHTML = "💸 Preparing transaction (0.001 ETH) to your nest...";
                 resultDisplay.style.color = "#f3e5ab";
             }
         });
