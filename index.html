@@ -140,81 +140,61 @@
 
         // Ton adresse Farcaster principale (compte CHASSEUR) sécurisée
         const destinationAddress = "0x872bD846596Cc1aEde8Fd800997d242e3473fA83"; 
-        
-        // Configuration pour le réseau BASE (ID: 8453 -> En Hexadécimal: 0x2105)
-        const targetChainId = "0x2105"; 
-
-        async function checkAndSwitchNetwork() {
-            const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
-            if (currentChainId !== targetChainId) {
-                try {
-                    // Demande au portefeuille de basculer sur Base
-                    await window.ethereum.request({
-                        method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: targetChainId }],
-                    });
-                    return true;
-                } catch (switchError) {
-                    // Si le réseau Base n'est pas configuré dans son wallet, on l'ajoute automatiquement
-                    if (switchError.code === 4902) {
-                        try {
-                            await window.ethereum.request({
-                                method: 'wallet_addEthereumChain',
-                                params: [{
-                                    chainId: targetChainId,
-                                    chainName: 'Base',
-                                    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-                                    rpcUrls: ['https://mainnet.base.org'],
-                                    blockExplorerUrls: ['https://basescan.org']
-                                }],
-                            ]);
-                            return true;
-                        } catch (addError) {
-                            return false;
-                        }
-                    }
-                    return false;
-                }
-            }
-            return true;
-        }
+        const targetChainId = "0x2105"; // Base Mainnet (8453)
 
         async function connectWallet() {
             if (typeof window.ethereum !== 'undefined') {
                 try {
                     resultDisplay.innerHTML = "Connecting...";
+                    
+                    // Demande de connexion au compte
                     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                     userWalletAddress = accounts[0];
                     
-                    // Vérification et bascule sur le réseau Base
-                    const isCorrectNetwork = await checkAndSwitchNetwork();
-                    
-                    if (isCorrectNetwork) {
-                        const shortAddress = userWalletAddress.substring(0, 6) + "..." + userWalletAddress.substring(userWalletAddress.length - 4);
+                    // Tenter de basculer sur le réseau Base
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_switchEthereumChain',
+                            params: [{ chainId: targetChainId }],
+                        });
+                    } catch (switchError) {
+                        console.log("Réseau déjà actif ou bascule manuelle requise.");
+                    }
+
+                    // Récupération finale du réseau actuel pour affichage
+                    const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
+                    const shortAddress = userWalletAddress.substring(0, 6) + "..." + userWalletAddress.substring(userWalletAddress.length - 4);
+
+                    if (currentChainId === targetChainId) {
                         resultDisplay.innerHTML = `✅ Connected on Base: ${shortAddress}`;
                         resultDisplay.style.color = "#d4af37";
-                        button.innerHTML = "Try My Luck (0.001 ETH)";
                     } else {
-                        resultDisplay.innerHTML = "❌ Please switch to Base Network to play.";
-                        resultDisplay.style.color = "#ff4a4a";
-                        userWalletAddress = null;
+                        resultDisplay.innerHTML = `⚠️ Connected: ${shortAddress} (Please switch your wallet to BASE)`;
+                        resultDisplay.style.color = "#ff9a4a";
                     }
+                    
+                    button.innerHTML = "Try My Luck (0.001 ETH)";
                 } catch (error) {
                     console.error(error);
                     resultDisplay.innerHTML = "❌ Connection denied.";
                     resultDisplay.style.color = "#ff4a4a";
+                    userWalletAddress = null;
                 }
             } else {
-                resultDisplay.innerHTML = "🦊 Wallet not detected. Open this inside Coinbase Wallet or MetaMask!";
+                resultDisplay.innerHTML = "🦊 Wallet not detected. Open this inside Coinbase Wallet!";
                 resultDisplay.style.color = "#ff9a4a";
             }
         }
 
         async function sendTransaction() {
             try {
-                // Double vérification du réseau avant d'envoyer
-                const isCorrectNetwork = await checkAndSwitchNetwork();
-                if (!isCorrectNetwork) return;
+                // Vérification ultime du réseau avant envoi
+                const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
+                if (currentChainId !== targetChainId) {
+                    resultDisplay.innerHTML = "❌ Switch your wallet network to BASE before playing!";
+                    resultDisplay.style.color = "#ff4a4a";
+                    return;
+                }
 
                 resultDisplay.innerHTML = "⚡ Please confirm the transaction in your wallet...";
                 resultDisplay.style.color = "#f3e5ab";
