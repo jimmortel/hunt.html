@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TALON Hatchery - Le Jeu de l'Œuf</title>
+    <style>
+        /* Design sombre et élégant inspiré de l'Art Nouveau */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0d0d0d;
+            color: #e5c1b3; /* Teinte douce or rose / cuivre */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: #d4af37; /* Couleur Or pour le titre */
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: #a68a80;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        /* Zone de l'image sacrée */
+        .art-container {
+            position: relative;
+            width: 100%;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.15);
+            border: 1px solid #4a3b32;
+            margin-bottom: 25px;
+        }
+
+        .art-container img {
+            width: 100%;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        /* Animation quand on clique sur l'œuf */
+        .art-container img:active {
+            transform: scale(0.98);
+        }
+
+        /* Bouton d'action interactif */
+        .btn-interact {
+            background: linear-gradient(135deg, #4a3525 0%, #2b1a10 100%);
+            color: #f3e5ab;
+            border: 2px solid #d4af37;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            transition: all 0.2s ease;
+            width: 80%;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-interact:active {
+            transform: scale(0.95);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Zone d'affichage des résultats du jeu */
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: #141414;
+            border: 1px solid #2b1a10;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>TALON Hatchery</h1>
+        <div class="subtitle">Réveillez la puissance de l'Aigle</div>
+
+        <div class="art-container">
+            <img src="ton-image.png" alt="L'Œuf de l'Aigle - TALON" id="eagle-egg">
+        </div>
+
+        <button class="btn-interact" id="play-button">Tenter ma chance</button>
+
+        <div class="result-box" id="result-display">
+            Misez un peu d'ETH pour interagir avec l'Œuf...
+        </div>
+    </div>
+
+    <script>
+        // Logique de test temporaire en JavaScript
+        const button = document.getElementById('play-button');
+        const resultDisplay = document.getElementById('result-display');
+
+        button.addEventListener('click', () => {
+            resultDisplay.innerHTML = "⚡ Connexion au portefeuille bientôt disponible pour valider votre gain en $TALON !";
+            resultDisplay.style.color = "#d4af37";
+        });
+    </script>
+
+</body>
+</html>
